@@ -64,9 +64,19 @@ class CardContainer extends StatelessWidget {
             ],
           ),
           const Spacer(),
-          Text(
-            "59,000 IRT",
-            style: Theme.of(context).textTheme.headlineLarge,
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "59,000",
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
+              const SizedBox(width: 5),
+              Text(
+                "IRT",
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+            ],
           ),
         ],
       ),

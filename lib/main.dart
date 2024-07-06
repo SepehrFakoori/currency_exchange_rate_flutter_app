@@ -17,7 +17,12 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.poppinsTextTheme(
           const TextTheme(
             headlineLarge: TextStyle(
+              fontSize: 25,
               fontWeight: FontWeight.bold,
+            ),
+            headlineMedium: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
