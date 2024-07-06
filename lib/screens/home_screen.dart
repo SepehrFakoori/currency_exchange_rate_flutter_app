@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
                   return const CardContainer();
-                },
+                }, childCount: 10,
               ),
             ),
           ],
