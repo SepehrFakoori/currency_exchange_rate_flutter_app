@@ -52,18 +52,20 @@ class CardContainer extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "USD",
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-              const Text("United State Dollar"),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "USD",
+                  style: Theme.of(context).textTheme.headlineLarge,
+                ),
+                const Spacer(),
+                const Text("United State Dollar"),
+              ],
+            ),
           ),
-          const Spacer(),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
