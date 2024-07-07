@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen>
                   child: Row(
                     children: [
                       Text(
-                        "2022.10.30",
+                        "23:54",
                         style:
                             Theme.of(context).textTheme.headlineSmall!.copyWith(
                                   fontSize: 14,
