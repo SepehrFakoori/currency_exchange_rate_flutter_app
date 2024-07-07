@@ -34,10 +34,18 @@ class _HomeScreenState extends State<HomeScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Sepehr Fakoori",
-                    style: Theme.of(context).textTheme.headlineLarge,
+                    "EX Rate",
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineLarge!
+                        .copyWith(color: AppColors.priceColor),
                   ),
-                  SvgPicture.asset("assets/images/settings.svg"),
+                  SvgPicture.asset(
+                    "assets/icons/settings.svg",
+                    color: AppColors.priceColor,
+                    width: 40,
+                    height: 40,
+                  ),
                 ],
               ),
               const SizedBox(height: 20),
@@ -49,8 +57,31 @@ class _HomeScreenState extends State<HomeScreen>
               ),
               const SizedBox(height: 20),
               TabBarContainer(tabController: _tabController),
-              const SizedBox(
-                height: 10,
+              Directionality(
+                textDirection: TextDirection.rtl,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  width: double.infinity,
+                  child: Row(
+                    children: [
+                      Text(
+                        "2022.10.30",
+                        style:
+                            Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                  fontSize: 14,
+                                ),
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        ", 2022.10.30",
+                        style:
+                            Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                  fontSize: 14,
+                                ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
               Expanded(
                 child: TabBarView(
@@ -133,13 +164,20 @@ class TabBarContainer extends StatelessWidget {
   }
 }
 
-class CardContainer extends StatelessWidget {
+class CardContainer extends StatefulWidget {
   final int index;
 
   const CardContainer(
     this.index, {
     super.key,
   });
+
+  @override
+  State<CardContainer> createState() => _CardContainerState();
+}
+
+class _CardContainerState extends State<CardContainer> {
+  bool _isFavorite = false;
 
   @override
   Widget build(BuildContext context) {
@@ -154,12 +192,12 @@ class CardContainer extends StatelessWidget {
           color: AppColors.lowEmphasisColor,
           width: 0.5,
         ),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
-            color: Colors.black.withOpacity(0.5),
-            blurRadius: 10,
-            spreadRadius: -5,
-            offset: const Offset(0, 2),
+            color: AppColors.priceColor,
+            blurRadius: 7,
+            spreadRadius: -2,
+            offset: Offset(0, 3),
           ),
         ],
       ),
@@ -167,7 +205,7 @@ class CardContainer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "${index + 1}",
+            "${widget.index + 1}",
             style: Theme.of(context).textTheme.headlineLarge,
           ),
           const SizedBox(width: 10),
@@ -240,6 +278,22 @@ class CardContainer extends StatelessWidget {
                           Theme.of(context).textTheme.headlineMedium!.copyWith(
                                 color: AppColors.priceColor,
                               ),
+                    ),
+                    const Spacer(),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isFavorite = !_isFavorite;
+                        });
+                      },
+                      child: SvgPicture.asset(
+                        _isFavorite
+                            ? "assets/icons/filled_star.svg"
+                            : "assets/icons/unfilled_star.svg",
+                        color: AppColors.priceColor,
+                        width: 30,
+                        height: 30,
+                      ),
                     ),
                   ],
                 ),
