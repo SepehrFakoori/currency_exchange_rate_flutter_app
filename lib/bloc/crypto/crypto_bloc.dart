@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class CryptoBloc extends Bloc<CryptoEvent, CryptoState> {
   final ICryptoCurrencyRepository _repository;
   CryptoBloc(this._repository) : super(CryptoInitState()) {
-    on<CryptoInitializeEvent>((event, state) async {
+    on<CryptoInitializeEvent>((event, emit) async {
       emit(CryptoLoadingState());
       final response = await _repository.getCryptoCurrencies();
       emit(CryptoResponseState(response));

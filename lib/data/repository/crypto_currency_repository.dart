@@ -1,5 +1,6 @@
 import 'package:currency_exchange_rate_app_flutter/data/datasource/crypto_currency_datasource.dart';
 import 'package:currency_exchange_rate_app_flutter/data/model/crypto_currency.dart';
+import 'package:currency_exchange_rate_app_flutter/util/api_exception.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../di/di.dart';
@@ -16,9 +17,8 @@ class CryptoCurrencyRepository extends ICryptoCurrencyRepository {
     try {
       var response = await _dataSource.getCryptoCurrencies();
       return right(response);
-
-    } on Exception catch (ex) {
-      return left(ex.toString());
+    } on ApiException catch (ex) {
+      return left(ex.message ?? "Text Error We Got!");
     }
   }
 }
