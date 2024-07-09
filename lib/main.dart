@@ -1,10 +1,12 @@
 import 'package:currency_exchange_rate_app_flutter/constants/app_colors.dart';
+import 'package:currency_exchange_rate_app_flutter/di/di.dart';
 import 'package:currency_exchange_rate_app_flutter/screens/home_screen.dart';
 import 'package:currency_exchange_rate_app_flutter/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-void main() {
+void main() async {
+  await getItInit();
   runApp(const MyApp());
 }
 
