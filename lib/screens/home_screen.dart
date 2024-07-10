@@ -1,6 +1,11 @@
+import 'package:currency_exchange_rate_app_flutter/bloc/crypto/crypto_bloc.dart';
+import 'package:currency_exchange_rate_app_flutter/bloc/crypto/crypto_state.dart';
 import 'package:currency_exchange_rate_app_flutter/constants/app_colors.dart';
+import 'package:currency_exchange_rate_app_flutter/data/model/crypto_currency.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,12 +16,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
-  TabController? _tabController;
+  TabController? tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -24,100 +29,127 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "EX Rate",
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineLarge!
-                        .copyWith(color: AppColors.priceColor),
-                  ),
-                  SvgPicture.asset(
-                    "assets/icons/settings.svg",
-                    color: AppColors.priceColor,
-                    width: 40,
-                    height: 40,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Text(
-                "Exchange Rate",
-                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                      color: AppColors.priceColor,
-                    ),
-              ),
-              const SizedBox(height: 20),
-              TabBarContainer(tabController: _tabController),
-              Directionality(
-                textDirection: TextDirection.rtl,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  width: double.infinity,
-                  child: Row(
-                    children: [
-                      Text(
-                        "23:54",
-                        style:
-                            Theme.of(context).textTheme.headlineSmall!.copyWith(
-                                  fontSize: 14,
-                                ),
-                      ),
-                      const SizedBox(width: 5),
-                      Text(
-                        ", 2022.10.30",
-                        style:
-                            Theme.of(context).textTheme.headlineSmall!.copyWith(
-                                  fontSize: 14,
-                                ),
-                      ),
-                    ],
-                  ),
+        child: BlocBuilder<CryptoBloc, CryptoState>(
+          builder: (context, state) {
+            return _getHomeContent(state, context, tabController!);
+          },
+        ),
+      ),
+    );
+  }
+}
+
+Widget _getHomeContent(
+    CryptoState state, BuildContext context, TabController tabController) {
+  if (state is CryptoLoadingState) {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  } else if (state is CryptoResponseState) {
+    return state.response.fold((exceptionMessage) {
+      return Center(
+        child: Text(exceptionMessage),
+      );
+    }, (cryptoCurrencyList) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "EX Rate",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineLarge!
+                      .copyWith(color: AppColors.priceColor),
                 ),
-              ),
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
+                SvgPicture.asset(
+                  "assets/icons/settings.svg",
+                  color: AppColors.priceColor,
+                  width: 40,
+                  height: 40,
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Text(
+              "Exchange Rate",
+              style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                    color: AppColors.priceColor,
+                  ),
+            ),
+            const SizedBox(height: 20),
+            TabBarContainer(tabController: tabController),
+            Directionality(
+              textDirection: TextDirection.rtl,
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                width: double.infinity,
+                child: Row(
                   children: [
-                    CustomScrollView(
-                      slivers: [
-                        SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              return CardContainer(index);
-                            },
-                            childCount: 10,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      "23:54",
+                      style:
+                          Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                fontSize: 14,
+                              ),
                     ),
-                    CustomScrollView(
-                      slivers: [
-                        SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              return CardContainer(index);
-                            },
-                            childCount: 10,
-                          ),
-                        ),
-                      ],
+                    const SizedBox(width: 5),
+                    Text(
+                      ", 2022.10.30",
+                      style:
+                          Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                fontSize: 14,
+                              ),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: tabController,
+                children: [
+                  CustomScrollView(
+                    slivers: [
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            return CardContainer(
+                                index, cryptoCurrencyList[index]);
+                          },
+                          childCount: cryptoCurrencyList.length,
+                        ),
+                      ),
+                    ],
+                  ),
+                  CustomScrollView(
+                    slivers: [
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            return CardContainer(
+                                index, cryptoCurrencyList[index]);
+                          },
+                          childCount: cryptoCurrencyList.length,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-      ),
+      );
+    });
+  } else {
+    return const Center(
+      child: Text("Something is Wrong!"),
     );
   }
 }
@@ -166,9 +198,11 @@ class TabBarContainer extends StatelessWidget {
 
 class CardContainer extends StatefulWidget {
   final int index;
+  CryptoCurrency cryptoCurrency;
 
-  const CardContainer(
-    this.index, {
+  CardContainer(
+    this.index,
+    this.cryptoCurrency, {
     super.key,
   });
 
@@ -220,7 +254,7 @@ class _CardContainerState extends State<CardContainer> {
                           const Icon(Icons.money),
                           const SizedBox(width: 4),
                           Text(
-                            "United State Dollar",
+                            widget.cryptoCurrency.englishName.toString(),
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineMedium!
@@ -232,7 +266,7 @@ class _CardContainerState extends State<CardContainer> {
                       ),
                     ),
                     Text(
-                      "USD",
+                      widget.cryptoCurrency.keyName.toString(),
                       style:
                           Theme.of(context).textTheme.headlineSmall!.copyWith(
                                 color: AppColors.lowEmphasisColor,
@@ -244,8 +278,9 @@ class _CardContainerState extends State<CardContainer> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      "59,000",
+                    AutoSizeText(
+                      widget.cryptoCurrency.price.toString(),
+                      maxLines: 1,
                       style:
                           Theme.of(context).textTheme.headlineSmall!.copyWith(
                                 color: Colors.black.withOpacity(0.38),
@@ -264,8 +299,9 @@ class _CardContainerState extends State<CardContainer> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      "59,000",
+                    AutoSizeText(
+                      widget.cryptoCurrency.price.toString(),
+                      maxLines: 1,
                       style:
                           Theme.of(context).textTheme.headlineLarge!.copyWith(
                                 color: AppColors.priceColor,
