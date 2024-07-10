@@ -1,9 +1,9 @@
 import 'package:currency_exchange_rate_app_flutter/data/datasource/crypto_currency_datasource.dart';
 import 'package:currency_exchange_rate_app_flutter/data/model/crypto_currency.dart';
+import 'package:currency_exchange_rate_app_flutter/di/di.dart';
 import 'package:currency_exchange_rate_app_flutter/util/api_exception.dart';
 import 'package:dartz/dartz.dart';
 
-import '../../di/di.dart';
 
 abstract class ICryptoCurrencyRepository {
   Future<Either<String, List<CryptoCurrency>>> getCryptoCurrencies();
