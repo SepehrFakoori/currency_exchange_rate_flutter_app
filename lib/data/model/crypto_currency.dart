@@ -2,8 +2,8 @@ class CryptoCurrency {
   String? keyName;
   String? persianName;
   String? englishName;
-  int? rank;
-  double? price;
+  String? rank;
+  String? price;
 
   CryptoCurrency(
     this.keyName,
@@ -18,8 +18,8 @@ class CryptoCurrency {
       jsonObject["key"],
       jsonObject["name"],
       jsonObject["name_en"],
-      jsonObject["rank"],
-      jsonObject["price"],
+      jsonObject["rank"].toString(),
+      jsonObject["price"].toString(),
     );
   }
 }
