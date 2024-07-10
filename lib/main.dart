@@ -1,7 +1,10 @@
+import 'package:currency_exchange_rate_app_flutter/bloc/crypto/crypto_bloc.dart';
+import 'package:currency_exchange_rate_app_flutter/bloc/crypto/crypto_event.dart';
 import 'package:currency_exchange_rate_app_flutter/constants/app_colors.dart';
 import 'package:currency_exchange_rate_app_flutter/di/di.dart';
 import 'package:currency_exchange_rate_app_flutter/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
@@ -35,7 +38,14 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const HomeScreen(),
+      home: BlocProvider(
+        create: (context) {
+          var bloc = CryptoBloc();
+          bloc.add(CryptoInitializeEvent());
+          return bloc;
+        },
+        child: const HomeScreen(),
+      ),
     );
   }
 }
