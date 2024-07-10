@@ -44,6 +44,7 @@ dependencies:
   dartz: ^0.10.1
   bloc: ^8.1.0
   flutter_bloc: ^8.1.1
+  auto_size_text: ^3.0.0
 
 
 dev_dependencies:
