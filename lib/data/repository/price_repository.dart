@@ -1,24 +1,27 @@
-import 'package:currency_exchange_rate_app_flutter/data/datasource/crypto_currency_datasource.dart';
-import 'package:currency_exchange_rate_app_flutter/data/model/crypto_currency.dart';
+import 'package:currency_exchange_rate_app_flutter/data/datasource/price_datasource.dart';
+import 'package:currency_exchange_rate_app_flutter/data/model/coin.dart';
 import 'package:currency_exchange_rate_app_flutter/data/model/currency.dart';
+import 'package:currency_exchange_rate_app_flutter/data/model/gold.dart';
 import 'package:currency_exchange_rate_app_flutter/di/di.dart';
 import 'package:currency_exchange_rate_app_flutter/util/api_exception.dart';
 import 'package:dartz/dartz.dart';
 
 
-abstract class ICryptoCurrencyRepository {
-  Future<Either<String, List<CryptoCurrency>>> getCryptoCurrencies();
-
+abstract class IPriceRepository {
   Future<Either<String, List<Currency>>> getCurrencies();
+
+  Future<Either<String, List<Gold>>> getGolds();
+
+  Future<Either<String, List<Coin>>> getCoins();
 }
 
-class CryptoCurrencyRepository extends ICryptoCurrencyRepository {
-  final ICryptoCurrencyDataSource _dataSource = locator.get();
+class PriceRepository extends IPriceRepository {
+  final IPriceDataSource _dataSource = locator.get();
 
   @override
-  Future<Either<String, List<CryptoCurrency>>> getCryptoCurrencies() async {
+  Future<Either<String, List<Currency>>> getCurrencies() async {
     try {
-      var response = await _dataSource.getCryptoCurrencies();
+      var response = await _dataSource.getCurrencies();
       return right(response);
     } on ApiException catch (ex) {
       return left(ex.message ?? "Text Error We Got!");
@@ -26,9 +29,19 @@ class CryptoCurrencyRepository extends ICryptoCurrencyRepository {
   }
 
   @override
-  Future<Either<String, List<Currency>>> getCurrencies() async {
+  Future<Either<String, List<Gold>>> getGolds() async {
     try {
-      var response = await _dataSource.getCurrencies();
+      var response = await _dataSource.getGolds();
+      return right(response);
+    } on ApiException catch (ex) {
+      return left(ex.message ?? "Text Error We Got!");
+    }
+  }
+
+  @override
+  Future<Either<String, List<Coin>>> getCoins() async {
+    try {
+      var response = await _dataSource.getCoins();
       return right(response);
     } on ApiException catch (ex) {
       return left(ex.message ?? "Text Error We Got!");

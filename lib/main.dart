@@ -1,5 +1,5 @@
-import 'package:currency_exchange_rate_app_flutter/bloc/crypto/crypto_bloc.dart';
-import 'package:currency_exchange_rate_app_flutter/bloc/crypto/crypto_event.dart';
+import 'package:currency_exchange_rate_app_flutter/bloc/home/home_bloc.dart';
+import 'package:currency_exchange_rate_app_flutter/bloc/home/home_event.dart';
 import 'package:currency_exchange_rate_app_flutter/constants/app_colors.dart';
 import 'package:currency_exchange_rate_app_flutter/di/di.dart';
 import 'package:currency_exchange_rate_app_flutter/screens/home_screen.dart';
@@ -40,8 +40,8 @@ class MyApp extends StatelessWidget {
       ),
       home: BlocProvider(
         create: (context) {
-          var bloc = CryptoBloc();
-          bloc.add(CryptoInitializeEvent());
+          var bloc = HomeBloc();
+          bloc.add(HomeInitializeEvent());
           return bloc;
         },
         child: const HomeScreen(),

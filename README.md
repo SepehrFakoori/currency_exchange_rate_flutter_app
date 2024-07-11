@@ -1,16 +1,24 @@
-# currency_exchange_rate_app_flutter
+# Currency Exchange Rate application using Flutter + GetIt + Dio
 
-A new Flutter project.
+## Descriptions
+👋 Hey there!
 
-## Getting Started
+As part of my Flutter course, I developed an app for some practice. I used Bloc as state manager and GetIt for dependency injection and Dio requests. Overall, I'm pretty excited about how this project turned out and I hope you will enjoy it too! ❤️
 
-This project is a starting point for a Flutter application.
+## ScreenShots
+<br />
+<div>
+  &emsp;&emsp;&emsp;
+  <img src="https://github.com/SepehrFakoori/currency_exchange_rate_flutter_app/blob/1398995a4719494560f22370309db0bf22d8146d/assets/images/Splashscreen.png" alt="Splash Screen" width="180">
+  &emsp;&emsp;&emsp;&emsp;
+  <img src="https://github.com/SepehrFakoori/currency_exchange_rate_flutter_app/blob/1398995a4719494560f22370309db0bf22d8146d/assets/images/Loading.png" alt="Loading" width="180">  
+  &emsp;&emsp;&emsp;&emsp;
+  <img src="https://github.com/SepehrFakoori/currency_exchange_rate_flutter_app/blob/1398995a4719494560f22370309db0bf22d8146d/assets/images/Homescreen.png" alt="Home Screen" width="180">
+</div>
+<br />
 
-A few resources to get you started if this is your first Flutter project:
+## My Socials:
+* [INSTAGRAM](https://www.instagram.com/sepehrfakoori)
+* [LINKEDIN](https://www.linkedin.com/in/sepehrfakoori)
+* [CONTACT ME](https://sepehrfakoori99@gmail.com)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
