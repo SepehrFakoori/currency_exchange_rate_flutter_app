@@ -8,14 +8,14 @@ class Coin {
   String? time;
 
   Coin(
-      this.name,
-      this.currentPrice,
-      this.high,
-      this.low,
-      this.change,
-      this.percent,
-      this.time,
-      );
+    this.name,
+    this.currentPrice,
+    this.high,
+    this.low,
+    this.change,
+    this.percent,
+    this.time,
+  );
 
   factory Coin.fromMapJson(Map<String, dynamic> jsonObject) {
     return Coin(
