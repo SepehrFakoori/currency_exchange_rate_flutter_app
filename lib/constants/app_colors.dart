@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const backgroundColor = Color(0xff8cebca);
-  static Color highEmphasisColor = Colors.black.withOpacity(0.87);
-  static Color mediumEmphasisColor = Colors.black.withOpacity(0.60);
-  static Color lowEmphasisColor = Colors.black.withOpacity(0.38);
-  static const priceColor = Color(0xff0f917c);
+  static const darkColor = Color(0xff192029);
+  static const lightDarkColor = Color(0xff212f3c);
+  static const highEmphasisColor = Color(0xffFFFFFF);
+  static const lowEmphasisColor = Color(0xff677786);
 }
