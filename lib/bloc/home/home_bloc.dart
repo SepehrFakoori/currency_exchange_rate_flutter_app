@@ -10,7 +10,8 @@ class CryptoBloc extends Bloc<CryptoEvent, CryptoState> {
   CryptoBloc() : super(CryptoInitState()) {
     on<CryptoInitializeEvent>((event, emit) async {
       emit(CryptoLoadingState());
-      var response = await _repository.getCryptoCurrencies();
+      // var response = await _repository.getCryptoCurrencies();
+      var response = await _repository.getCurrencies();
       emit(CryptoResponseState(response));
     });
   }
