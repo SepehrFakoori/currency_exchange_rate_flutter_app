@@ -13,7 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: AppColors.darkColor,
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20),
         child: Column(
@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Text(
               "EX Rate",
               style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                    color: AppColors.priceColor,
+                    color: AppColors.highEmphasisColor,
                     fontSize: 50,
                   ),
             ),
@@ -37,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
               style: Theme.of(context)
                   .textTheme
                   .headlineSmall!
-                  .copyWith(fontSize: 16, color: AppColors.priceColor),
+                  .copyWith(fontSize: 16, color: AppColors.lowEmphasisColor),
             ),
           ],
         ),

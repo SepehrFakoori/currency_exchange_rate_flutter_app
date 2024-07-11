@@ -1,5 +1,5 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:currency_exchange_rate_app_flutter/bloc/home/home_bloc.dart';
+import 'package:currency_exchange_rate_app_flutter/bloc/home/home_event.dart';
 import 'package:currency_exchange_rate_app_flutter/bloc/home/home_state.dart';
 import 'package:currency_exchange_rate_app_flutter/constants/app_colors.dart';
 import 'package:currency_exchange_rate_app_flutter/data/model/coin.dart';
@@ -10,165 +10,305 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.darkColor,
+      drawer: const _DrawerContainer(),
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: ((context, state) {
           if (state is HomeLoadingState) {
             return Center(
               child: LoadingAnimationWidget.halfTriangleDot(
-                color: AppColors.priceColor,
+                color: AppColors.highEmphasisColor,
                 size: 80,
               ),
             );
           }
           return SafeArea(
-            child: CustomScrollView(
-              slivers: [
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  sliver: SliverToBoxAdapter(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "EX Rate",
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineLarge!
-                              .copyWith(color: AppColors.priceColor),
-                        ),
-                        SvgPicture.asset(
-                          "assets/icons/settings.svg",
-                          color: AppColors.priceColor,
-                          width: 40,
-                          height: 40,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 20),
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const TextField(
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        prefixIcon: Icon(Icons.search),
+            child: RefreshIndicator(
+              onRefresh: () async {
+                context.read<HomeBloc>().add(HomeInitializeEvent());
+              },
+              backgroundColor: AppColors.lightDarkColor,
+              color: AppColors.highEmphasisColor,
+              child: CustomScrollView(
+                physics: const BouncingScrollPhysics(),
+                slivers: [
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    sliver: SliverToBoxAdapter(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Scaffold.of(context).openDrawer();
+                            },
+                            child: SvgPicture.asset(
+                              "assets/icons/options.svg",
+                              color: AppColors.highEmphasisColor,
+                              width: 30,
+                              height: 30,
+                            ),
+                          ),
+                          Text(
+                            "EX Rate",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge!
+                                .copyWith(
+                                  color: AppColors.highEmphasisColor,
+                                ),
+                          ),
+                          const SizedBox(),
+                        ],
                       ),
                     ),
                   ),
-                ),
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  sliver: SliverToBoxAdapter(
-                    child: Text(
-                      "Currencies",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall!
-                          .copyWith(fontSize: 18),
-                    ),
-                  ),
-                ),
-                if (state is HomeResponseState) ...{
-                  state.currencyResponse.fold((exceptionMessage) {
-                    return const Center(
-                      child: Text("Data Currency Not Found!"),
-                    );
-                  }, (currencyList) {
-                    return SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      sliver: SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                              (context, index) {
-                            return CurrencyCardContainer(currencyList[index]);
-                          },
-                          childCount: currencyList.length,
+                  SliverToBoxAdapter(
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 20),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: AppColors.highEmphasisColor,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: "Search",
+                          hintStyle:
+                              Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                    color: AppColors.lowEmphasisColor,
+                                  ),
+                          border: InputBorder.none,
+                          prefixIcon: const Icon(
+                            Icons.search,
+                            color: AppColors.lowEmphasisColor,
+                          ),
                         ),
                       ),
-                    );
-                  })
-                },
-                SliverPadding(
-                  padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-                  sliver: SliverToBoxAdapter(
-                    child: Text(
-                      "Gold",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall!
-                          .copyWith(fontSize: 18),
                     ),
                   ),
-                ),
-                if (state is HomeResponseState) ...{
-                  state.goldResponse.fold((exceptionMessage) {
-                    return const Center(
-                      child: Text("Data Currency Not Found!"),
-                    );
-                  }, (goldList) {
-                    return SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      sliver: SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                              (context, index) {
-                            return GoldCardContainer(goldList[index]);
-                          },
-                          childCount: goldList.length,
-                        ),
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    sliver: SliverToBoxAdapter(
+                      child: Text(
+                        "Currencies",
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              color: AppColors.highEmphasisColor,
+                            ),
                       ),
-                    );
-                  })
-                },
-                SliverPadding(
-                  padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-                  sliver: SliverToBoxAdapter(
-                    child: Text(
-                      "Coin",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall!
-                          .copyWith(fontSize: 18),
                     ),
                   ),
-                ),
-                if (state is HomeResponseState) ...{
-                  state.coinResponse.fold((exceptionMessage) {
-                    return const Center(
-                      child: Text("Data Currency Not Found!"),
-                    );
-                  }, (coinList) {
-                    return SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      sliver: SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                              (context, index) {
-                            return CoinCardContainer(coinList[index]);
-                          },
-                          childCount: coinList.length,
+                  if (state is HomeResponseState) ...{
+                    state.currencyResponse.fold((exceptionMessage) {
+                      return const Center(
+                        child: Text("Data Currency Not Found!"),
+                      );
+                    }, (currencyList) {
+                      return SliverPadding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        sliver: SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              return CurrencyCardContainer(currencyList[index]);
+                            },
+                            childCount: currencyList.length,
+                          ),
                         ),
+                      );
+                    })
+                  },
+                  SliverPadding(
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, top: 20),
+                    sliver: SliverToBoxAdapter(
+                      child: Text(
+                        "Gold",
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              color: AppColors.highEmphasisColor,
+                            ),
                       ),
-                    );
-                  })
-                },
-                const SliverPadding(
-                  padding: EdgeInsets.only(bottom: 50.0),
-                ),
-              ],
+                    ),
+                  ),
+                  if (state is HomeResponseState) ...{
+                    state.goldResponse.fold((exceptionMessage) {
+                      return const Center(
+                        child: Text("Data Currency Not Found!"),
+                      );
+                    }, (goldList) {
+                      return SliverPadding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        sliver: SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              return GoldCardContainer(goldList[index]);
+                            },
+                            childCount: goldList.length,
+                          ),
+                        ),
+                      );
+                    })
+                  },
+                  SliverPadding(
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, top: 20),
+                    sliver: SliverToBoxAdapter(
+                      child: Text(
+                        "Coin",
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              color: AppColors.highEmphasisColor,
+                            ),
+                      ),
+                    ),
+                  ),
+                  if (state is HomeResponseState) ...{
+                    state.coinResponse.fold((exceptionMessage) {
+                      return const Center(
+                        child: Text("Data Currency Not Found!"),
+                      );
+                    }, (coinList) {
+                      return SliverPadding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        sliver: SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              return CoinCardContainer(coinList[index]);
+                            },
+                            childCount: coinList.length,
+                          ),
+                        ),
+                      );
+                    })
+                  },
+                  const SliverPadding(
+                    padding: EdgeInsets.only(bottom: 50.0),
+                  ),
+                ],
+              ),
             ),
           );
         }),
+      ),
+    );
+  }
+}
+
+class _DrawerContainer extends StatefulWidget {
+  const _DrawerContainer({
+    super.key,
+  });
+
+  @override
+  State<_DrawerContainer> createState() => _DrawerContainerState();
+}
+
+class _DrawerContainerState extends State<_DrawerContainer> {
+  bool _isLighmode = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      backgroundColor: AppColors.lightDarkColor,
+      width: 280,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            height: 100,
+          ),
+          Container(
+            width: 280,
+            height: 50,
+            padding: const EdgeInsets.only(left: 20.0, top: 10, right: 20.0),
+            child: Text(
+              "Options",
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+          ),
+          const Divider(
+            color: AppColors.lowEmphasisColor,
+          ),
+          Container(
+            width: 280,
+            height: 50,
+            padding: const EdgeInsets.only(left: 20.0, top: 10, right: 20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Theme Mode",
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                Switch(
+                  value: _isLighmode,
+                  onChanged: (value) {
+                    setState(() {
+                      _isLighmode = !_isLighmode;
+                    });
+                  },
+                  activeColor: AppColors.darkColor,
+                  activeTrackColor: AppColors.lowEmphasisColor,
+                  inactiveThumbColor: AppColors.lowEmphasisColor,
+                  inactiveTrackColor: AppColors.highEmphasisColor,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 4),
+          const SizedBox(height: 4),
+          InkWell(
+            child: Container(
+              width: 280,
+              height: 50,
+              padding: const EdgeInsets.only(left: 20.0, top: 10, right: 20.0),
+              child: Text(
+                "Support",
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
+          ),
+          const Spacer(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "EX Rate",
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: AppColors.lowEmphasisColor,
+                    ),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Version ",
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
+                  Text(
+                    "1.0.0",
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
+                ],
+              ),
+            ],
+          )
+        ],
       ),
     );
   }
@@ -178,121 +318,107 @@ class CurrencyCardContainer extends StatefulWidget {
   Currency currency;
 
   CurrencyCardContainer(
-      this.currency, {
-        super.key,
-      });
+    this.currency, {
+    super.key,
+  });
 
   @override
   State<CurrencyCardContainer> createState() => _CurrencyCardContainerState();
 }
 
 class _CurrencyCardContainerState extends State<CurrencyCardContainer> {
-  bool _isFavorite = false;
-
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-      height: 130,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      height: 140,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.lightDarkColor,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: AppColors.lowEmphasisColor,
-          width: 0.5,
-        ),
-        boxShadow: const [
-          BoxShadow(
-            color: AppColors.priceColor,
-            blurRadius: 7,
-            spreadRadius: -2,
-            offset: Offset(0, 3),
-          ),
-        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "1",
-            style: Theme.of(context).textTheme.headlineLarge,
+          Container(
+            height: 50,
+            width: 50,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),
+              color: Colors.red,
+            ),
           ),
           const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        widget.currency.name!,
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineMedium!
-                            .copyWith(
-                          color: AppColors.highEmphasisColor,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      widget.currency.name!,
-                      style:
-                      Theme.of(context).textTheme.headlineSmall!.copyWith(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.currency.name!.toUpperCase(),
+                style: Theme.of(context).textTheme.titleLarge,
+                maxLines: 1,
+                overflow: TextOverflow.fade,
+              ),
+              Text(
+                widget.currency.name!.toUpperCase(),
+                style: Theme.of(context)
+                    .textTheme
+                    .labelLarge!
+                    .copyWith(fontSize: 16),
+              ),
+              const Spacer(),
+              Row(
+                children: [
+                  const Icon(Icons.arrow_drop_up, color: Colors.green),
+                  Text(
+                    widget.currency.high!,
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelLarge!
+                        .copyWith(color: Colors.green),
+                  ),
+                  const SizedBox(width: 10),
+                  const Icon(Icons.arrow_drop_down, color: Colors.red),
+                  Text(
+                    widget.currency.low!,
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelLarge!
+                        .copyWith(color: Colors.red),
+                  ),
+                ],
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text(
+                    widget.currency.currentPrice!,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    "IRR",
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: AppColors.lowEmphasisColor, fontSize: 18),
+                  ),
+                  const SizedBox(width: 10),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                    decoration: BoxDecoration(
                         color: AppColors.lowEmphasisColor,
-                      ),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Text(
+                      "%${widget.currency.percent!}",
+                      style: Theme.of(context)
+                          .textTheme
+                          .labelLarge!
+                          .copyWith(color: AppColors.highEmphasisColor),
                     ),
-                  ],
-                ),
-                const Spacer(),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        AutoSizeText(
-                          widget.currency.currentPrice!,
-                          maxLines: 1,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineLarge!
-                              .copyWith(
-                            color: AppColors.priceColor,
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          "IRT",
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium!
-                              .copyWith(
-                            color: AppColors.priceColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _isFavorite = !_isFavorite;
-                        });
-                      },
-                      child: SvgPicture.asset(
-                        _isFavorite
-                            ? "assets/icons/filled_star.svg"
-                            : "assets/icons/unfilled_star.svg",
-                        color: AppColors.priceColor,
-                        width: 30,
-                        height: 30,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
@@ -304,121 +430,106 @@ class GoldCardContainer extends StatefulWidget {
   Gold gold;
 
   GoldCardContainer(
-      this.gold, {
-        super.key,
-      });
+    this.gold, {
+    super.key,
+  });
 
   @override
   State<GoldCardContainer> createState() => _GoldCardContainerState();
 }
 
 class _GoldCardContainerState extends State<GoldCardContainer> {
-  bool _isFavorite = false;
-
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-      height: 130,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      height: 140,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.lightDarkColor,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: AppColors.lowEmphasisColor,
-          width: 0.5,
-        ),
-        boxShadow: const [
-          BoxShadow(
-            color: AppColors.priceColor,
-            blurRadius: 7,
-            spreadRadius: -2,
-            offset: Offset(0, 3),
-          ),
-        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "1",
-            style: Theme.of(context).textTheme.headlineLarge,
+          Container(
+            height: 50,
+            width: 50,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),
+              color: Colors.red,
+            ),
           ),
           const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        widget.gold.name!,
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineMedium!
-                            .copyWith(
-                          color: AppColors.highEmphasisColor,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      widget.gold.name!,
-                      style:
-                      Theme.of(context).textTheme.headlineSmall!.copyWith(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.gold.name!.toUpperCase(),
+                style: Theme.of(context).textTheme.titleLarge,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                widget.gold.name!.toUpperCase(),
+                style: Theme.of(context)
+                    .textTheme
+                    .labelLarge!
+                    .copyWith(fontSize: 16),
+              ),
+              const Spacer(),
+              Row(
+                children: [
+                  const Icon(Icons.arrow_drop_up, color: Colors.green),
+                  Text(
+                    widget.gold.high!,
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelLarge!
+                        .copyWith(color: Colors.green),
+                  ),
+                  const SizedBox(width: 10),
+                  const Icon(Icons.arrow_drop_down, color: Colors.red),
+                  Text(
+                    widget.gold.low!,
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelLarge!
+                        .copyWith(color: Colors.red),
+                  ),
+                ],
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    widget.gold.currentPrice!,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    "IRR",
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: AppColors.lowEmphasisColor, fontSize: 18),
+                  ),
+                  const SizedBox(width: 10),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                    decoration: BoxDecoration(
                         color: AppColors.lowEmphasisColor,
-                      ),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Text(
+                      "%${widget.gold.percent!}",
+                      style: Theme.of(context)
+                          .textTheme
+                          .labelLarge!
+                          .copyWith(color: AppColors.highEmphasisColor),
                     ),
-                  ],
-                ),
-                const Spacer(),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        AutoSizeText(
-                          widget.gold.currentPrice!,
-                          maxLines: 1,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineLarge!
-                              .copyWith(
-                            color: AppColors.priceColor,
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          "IRT",
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium!
-                              .copyWith(
-                            color: AppColors.priceColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _isFavorite = !_isFavorite;
-                        });
-                      },
-                      child: SvgPicture.asset(
-                        _isFavorite
-                            ? "assets/icons/filled_star.svg"
-                            : "assets/icons/unfilled_star.svg",
-                        color: AppColors.priceColor,
-                        width: 30,
-                        height: 30,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
@@ -430,121 +541,106 @@ class CoinCardContainer extends StatefulWidget {
   Coin coin;
 
   CoinCardContainer(
-      this.coin, {
-        super.key,
-      });
+    this.coin, {
+    super.key,
+  });
 
   @override
   State<CoinCardContainer> createState() => _CoinCardContainerState();
 }
 
 class _CoinCardContainerState extends State<CoinCardContainer> {
-  bool _isFavorite = false;
-
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-      height: 130,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      height: 140,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.lightDarkColor,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: AppColors.lowEmphasisColor,
-          width: 0.5,
-        ),
-        boxShadow: const [
-          BoxShadow(
-            color: AppColors.priceColor,
-            blurRadius: 7,
-            spreadRadius: -2,
-            offset: Offset(0, 3),
-          ),
-        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "1",
-            style: Theme.of(context).textTheme.headlineLarge,
+          Container(
+            height: 50,
+            width: 50,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),
+              color: Colors.red,
+            ),
           ),
           const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        widget.coin.name!,
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineMedium!
-                            .copyWith(
-                          color: AppColors.highEmphasisColor,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      widget.coin.name!,
-                      style:
-                      Theme.of(context).textTheme.headlineSmall!.copyWith(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.coin.name!.toUpperCase(),
+                style: Theme.of(context).textTheme.titleLarge,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                widget.coin.name!.toUpperCase(),
+                style: Theme.of(context)
+                    .textTheme
+                    .labelLarge!
+                    .copyWith(fontSize: 16),
+              ),
+              const Spacer(),
+              Row(
+                children: [
+                  const Icon(Icons.arrow_drop_up, color: Colors.green),
+                  Text(
+                    widget.coin.high!,
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelLarge!
+                        .copyWith(color: Colors.green),
+                  ),
+                  const SizedBox(width: 10),
+                  const Icon(Icons.arrow_drop_down, color: Colors.red),
+                  Text(
+                    widget.coin.low!,
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelLarge!
+                        .copyWith(color: Colors.red),
+                  ),
+                ],
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    widget.coin.currentPrice!,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    "IRR",
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: AppColors.lowEmphasisColor, fontSize: 18),
+                  ),
+                  const SizedBox(width: 10),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                    decoration: BoxDecoration(
                         color: AppColors.lowEmphasisColor,
-                      ),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Text(
+                      "%${widget.coin.percent!}",
+                      style: Theme.of(context)
+                          .textTheme
+                          .labelLarge!
+                          .copyWith(color: AppColors.highEmphasisColor),
                     ),
-                  ],
-                ),
-                const Spacer(),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        AutoSizeText(
-                          widget.coin.currentPrice!,
-                          maxLines: 1,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineLarge!
-                              .copyWith(
-                            color: AppColors.priceColor,
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          "IRT",
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium!
-                              .copyWith(
-                            color: AppColors.priceColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _isFavorite = !_isFavorite;
-                        });
-                      },
-                      child: SvgPicture.asset(
-                        _isFavorite
-                            ? "assets/icons/filled_star.svg"
-                            : "assets/icons/unfilled_star.svg",
-                        color: AppColors.priceColor,
-                        width: 30,
-                        height: 30,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
