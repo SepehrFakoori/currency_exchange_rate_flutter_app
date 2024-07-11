@@ -1,16 +1,22 @@
-import 'package:currency_exchange_rate_app_flutter/data/model/crypto_currency.dart';
+import 'package:currency_exchange_rate_app_flutter/data/model/coin.dart';
 import 'package:currency_exchange_rate_app_flutter/data/model/currency.dart';
+import 'package:currency_exchange_rate_app_flutter/data/model/gold.dart';
 import 'package:dartz/dartz.dart';
 
-abstract class CryptoState {}
+abstract class HomeState {}
 
-class CryptoInitState extends CryptoState {}
+class HomeInitState extends HomeState {}
 
-class CryptoLoadingState extends CryptoState {}
+class HomeLoadingState extends HomeState {}
 
-class CryptoResponseState extends CryptoState {
-  // Either<String, List<CryptoCurrency>> cryptoCurrencyResponse;
+class HomeResponseState extends HomeState {
   Either<String, List<Currency>> currencyResponse;
+  Either<String, List<Gold>> goldResponse;
+  Either<String, List<Coin>> coinResponse;
 
-  CryptoResponseState(this.currencyResponse);
+  HomeResponseState(
+    this.currencyResponse,
+    this.goldResponse,
+    this.coinResponse,
+  );
 }
