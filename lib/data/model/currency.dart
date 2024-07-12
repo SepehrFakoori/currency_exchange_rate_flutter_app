@@ -1,5 +1,8 @@
+import 'package:currency_exchange_rate_app_flutter/util/get_currency_name_by_symbol.dart';
+
 class Currency {
   String? name;
+  String? symbol;
   String? currentPrice;
   String? high;
   String? low;
@@ -9,6 +12,7 @@ class Currency {
 
   Currency(
     this.name,
+    this.symbol,
     this.currentPrice,
     this.high,
     this.low,
@@ -19,6 +23,7 @@ class Currency {
 
   factory Currency.fromMapJson(Map<String, dynamic> jsonObject) {
     return Currency(
+      getCurrencyFullName(jsonObject["name"].toString().toUpperCase()),
       jsonObject["name"],
       jsonObject["p"],
       jsonObject["h"],
