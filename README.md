@@ -9,11 +9,13 @@ As part of my Flutter course, I developed an app for some practice. I used Bloc 
 <br />
 <div>
   &emsp;&emsp;&emsp;
-  <img src="https://github.com/SepehrFakoori/currency_exchange_rate_flutter_app/blob/1398995a4719494560f22370309db0bf22d8146d/assets/images/Splashscreen.png" alt="Splash Screen" width="180">
+  <img src="https://github.com/SepehrFakoori/currency_exchange_rate_flutter_app/blob/34bde0b77685d110d02cc2159f047f5d71f04663/assets/images/Splashscreen.png" alt="Splash Screen" width="180">
   &emsp;&emsp;&emsp;&emsp;
-  <img src="https://github.com/SepehrFakoori/currency_exchange_rate_flutter_app/blob/1398995a4719494560f22370309db0bf22d8146d/assets/images/Loading.png" alt="Loading" width="180">  
+  <img src="https://github.com/SepehrFakoori/currency_exchange_rate_flutter_app/blob/34bde0b77685d110d02cc2159f047f5d71f04663/assets/images/Loading.png" alt="Loading" width="180">  
   &emsp;&emsp;&emsp;&emsp;
-  <img src="https://github.com/SepehrFakoori/currency_exchange_rate_flutter_app/blob/1398995a4719494560f22370309db0bf22d8146d/assets/images/Homescreen.png" alt="Home Screen" width="180">
+  <img src="https://github.com/SepehrFakoori/currency_exchange_rate_flutter_app/blob/34bde0b77685d110d02cc2159f047f5d71f04663/assets/images/Homescreen.png" alt="Home Screen" width="180">
+    &emsp;&emsp;&emsp;&emsp;
+  <img src="https://github.com/SepehrFakoori/currency_exchange_rate_flutter_app/blob/34bde0b77685d110d02cc2159f047f5d71f04663/assets/images/Drawer.png" alt="Drawer" width="180">
 </div>
 <br />
 
