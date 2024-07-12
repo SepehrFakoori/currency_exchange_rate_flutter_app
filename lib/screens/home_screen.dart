@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:currency_exchange_rate_app_flutter/bloc/home/home_bloc.dart';
 import 'package:currency_exchange_rate_app_flutter/bloc/home/home_event.dart';
 import 'package:currency_exchange_rate_app_flutter/bloc/home/home_state.dart';
@@ -44,7 +45,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 physics: const BouncingScrollPhysics(),
                 slivers: [
                   SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, top: 15),
                     sliver: SliverToBoxAdapter(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -53,11 +55,19 @@ class _HomeScreenState extends State<HomeScreen> {
                             onTap: () {
                               Scaffold.of(context).openDrawer();
                             },
-                            child: SvgPicture.asset(
-                              "assets/icons/options.svg",
-                              color: AppColors.highEmphasisColor,
+                            splashColor: AppColors.lightDarkColor,
+                            customBorder: const CircleBorder(),
+                            child: Ink(
+                              decoration:
+                                  const BoxDecoration(shape: BoxShape.circle),
                               width: 30,
                               height: 30,
+                              child: SvgPicture.asset(
+                                "assets/icons/options.svg",
+                                color: AppColors.highEmphasisColor,
+                                width: 30,
+                                height: 30,
+                              ),
                             ),
                           ),
                           Text(
@@ -270,18 +280,6 @@ class _DrawerContainerState extends State<_DrawerContainer> {
             ),
           ),
           const SizedBox(height: 4),
-          const SizedBox(height: 4),
-          InkWell(
-            child: Container(
-              width: 280,
-              height: 50,
-              padding: const EdgeInsets.only(left: 20.0, top: 10, right: 20.0),
-              child: Text(
-                "Support",
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ),
-          ),
           const Spacer(),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -352,14 +350,17 @@ class _CurrencyCardContainerState extends State<CurrencyCardContainer> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                widget.currency.name!.toUpperCase(),
-                style: Theme.of(context).textTheme.titleLarge,
-                maxLines: 1,
-                overflow: TextOverflow.fade,
+              SizedBox(
+                width: 260,
+                child: AutoSizeText(
+                    widget.currency.name!,
+                    style: Theme.of(context).textTheme.titleLarge,
+                    maxLines: 1,
+                    overflow: TextOverflow.fade,
+                  ),
               ),
               Text(
-                widget.currency.name!.toUpperCase(),
+                widget.currency.symbol!.toUpperCase(),
                 style: Theme.of(context)
                     .textTheme
                     .labelLarge!
@@ -465,17 +466,10 @@ class _GoldCardContainerState extends State<GoldCardContainer> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                widget.gold.name!.toUpperCase(),
+                widget.gold.name!,
                 style: Theme.of(context).textTheme.titleLarge,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-              ),
-              Text(
-                widget.gold.name!.toUpperCase(),
-                style: Theme.of(context)
-                    .textTheme
-                    .labelLarge!
-                    .copyWith(fontSize: 16),
               ),
               const Spacer(),
               Row(
@@ -580,13 +574,6 @@ class _CoinCardContainerState extends State<CoinCardContainer> {
                 style: Theme.of(context).textTheme.titleLarge,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-              ),
-              Text(
-                widget.coin.name!.toUpperCase(),
-                style: Theme.of(context)
-                    .textTheme
-                    .labelLarge!
-                    .copyWith(fontSize: 16),
               ),
               const Spacer(),
               Row(
