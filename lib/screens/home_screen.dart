@@ -462,7 +462,10 @@ class _GoldCardContainerState extends State<GoldCardContainer> {
             width: 50,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(25),
-              color: Colors.red,
+            ),
+            child: LottieBuilder.asset(
+              "assets/lottie/coin_animation.json",
+              frameRate: FrameRate.max,
             ),
           ),
           const SizedBox(width: 10),
@@ -566,7 +569,10 @@ class _CoinCardContainerState extends State<CoinCardContainer> {
             width: 50,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(25),
-              color: Colors.red,
+            ),
+            child: LottieBuilder.asset(
+              "assets/lottie/coin_animation.json",
+              frameRate: FrameRate.max,
             ),
           ),
           const SizedBox(width: 10),
