@@ -21,7 +21,7 @@ class PriceRemoteDatasource extends IPriceDataSource {
   Future<List<Currency>> getCurrencies() async {
     try {
       Map<String, dynamic> qParams = {
-        "token": "440714:668d2eb4c7b96",
+        "token": "123456789",
         "action": "tgju",
       };
       var response = await _dio.get("price/", queryParameters: qParams);
@@ -40,7 +40,7 @@ class PriceRemoteDatasource extends IPriceDataSource {
   Future<List<Gold>> getGolds() async {
     try {
       Map<String, dynamic> qParams = {
-        "token": "440714:668d2eb4c7b96",
+        "token": "123456789",
         "action": "tgju",
       };
       var response = await _dio.get("price/", queryParameters: qParams);
@@ -59,7 +59,7 @@ class PriceRemoteDatasource extends IPriceDataSource {
   Future<List<Coin>> getCoins() async {
     try {
       Map<String, dynamic> qParams = {
-        "token": "440714:668d2eb4c7b96",
+        "token": "123456789",
         "action": "tgju",
       };
       var response = await _dio.get("price/", queryParameters: qParams);
