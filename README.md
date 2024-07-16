@@ -1,4 +1,4 @@
-# Currency Exchange Rate application using Flutter + GetIt + Dio
+# Currency Exchange Rate application using Flutter + BloC + GetIt
 
 ## Descriptions
 👋 Hey there!
